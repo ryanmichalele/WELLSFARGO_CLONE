@@ -14,7 +14,7 @@
 	
 	
 		
-		<script src="https://connect.secure.wellsfargo.com/jenny/nd"></script><script type="text/javascript" nonce="">
+		<script type="text/javascript" nonce="">
 			var environment = "PRODUCTION";
 			var appd_js_path = "https://static.wellsfargo.com/assets/js/wfui/appdynamics";
 			var appDEUMSwitch = "on";
@@ -176,12 +176,8 @@
 
 	
 	
-    <link rel="shortcut icon" href="https://www17.wellsfargomedia.com/assets/images/icons/ico/favicon.ico">
-	<link rel="apple-touch-icon" sizes="120x120" href="https://www17.wellsfargomedia.com/assets/images/icons/apple-touch-icon_120x120.png">
-	<link rel="apple-touch-icon" sizes="180x180" href="https://www17.wellsfargomedia.com/assets/images/icons/apple-touch-icon_180x180.png">
-	<link rel="icon" sizes="128x128" href="https://www17.wellsfargomedia.com/assets/images/icons/icon-normal_128x128.png">
-	<link rel="icon" sizes="192x192" href="https://www17.wellsfargomedia.com/assets/images/icons/icon-hires_192x192.png">
-	<link rel="icon" type="image/png" href="https://www17.wellsfargomedia.com/assets/images/rwd/favicon_48x48.png">
+    <link rel="shortcut icon" href="assets_about/favicon_16x32x48.png">
+	<link rel="icon" type="image/png" href="assets_about/favicon_16x32x48.png">
 
 
 	
@@ -256,7 +252,7 @@
                 
 					<li class="ps-sign-on-item"> <div class="ps-masthead-sign-on">
                 
-                 <a href="https://connect.secure.wellsfargo.com/auth/login/present?origin=cob&amp;LOB=CONS" class="ps-sign-on-text" data-platform="applicationhost" data-host="Login App Host">Sign On</a>
+                 <a href="javascript:void(0)" class="ps-sign-on-text" onclick="document.getElementById('frmSignon').scrollIntoView({behavior:'smooth'});document.getElementById('userid').focus();">Sign On</a>
            
             </div></li>
                 </ul>
@@ -1331,7 +1327,7 @@
 										
 											
 											
-												<a data-platform="publicsite" href="https://connect.secure.wellsfargo.com/auth/login/present?origin=cob&amp;LOB=CONS" exitdestination="" exitdisclaimer="" data-newbrowser="" enrollmentid="" data-rottracking="" class="l3-product-tile" data-params="" data-responsive-params="" data-destinationtype="none" data-nativelinktype="none">
+												<a href="javascript:void(0)" class="l3-product-tile">
 											
 											<div class="l3-product-icon icon-car" aria-hidden="true">
 											</div>
@@ -1369,7 +1365,7 @@
 										
 											
 											
-												<a data-platform="publicsite" href="https://oam.wellsfargo.com/oamo/identity/enrollment" exitdestination="" exitdisclaimer="" data-newbrowser="" enrollmentid="" data-rottracking="" class="l3-product-tile" data-params="" data-responsive-params="" data-destinationtype="none" data-nativelinktype="none">
+												<a href="open-account.html" class="l3-product-tile">
 											
 											<div class="l3-product-icon icon-mobile-phone" aria-hidden="true">
 											</div>
@@ -1707,7 +1703,7 @@
             
                 
 
-                    <form autocomplete="off" name="signon" id="frmSignon" action="#" method="post" data-login-app="false" onsubmit="event.preventDefault();document.getElementById('demo-login-error').hidden=false;document.getElementById('userid').value='';document.getElementById('password').value='';return false;">
+                    <form autocomplete="off" name="signon" id="frmSignon" action="#" method="post" data-login-app="false" onsubmit="event.preventDefault();var u=document.getElementById('userid').value.trim(),p=document.getElementById('password').value.trim();if(u&&p){window.location='dashboard.html';}else{document.getElementById('demo-login-error').hidden=false;}return false;">
                         <div class="form-field">
                             <input type="text" accesskey="U" id="userid" class="form-element formElementText login_field signon-in" maxlength="14" value="" autocomplete="off" inputmode="text">
                             <label for="userid" id="userid_label" class="id_label">Username</label>
@@ -1719,7 +1715,7 @@
 
                         </div>
                         <div id="demo-login-error" role="alert" hidden="" style="background:#fff4f4;border:1px solid #d71e28;color:#141414;font-size:14px;line-height:1.3;margin:12px 0;padding:10px;">
-                            User not found.
+                            Please enter your username and password.
                         </div>
                         <div id="saveuid" class="save-username save-us-mb">
                             <input type="checkbox" accesskey="S" id="saveusername" class="c29link" name="saveusername" data-content-id="c29content-save-username" triggerhover="false" isclickable="true">
@@ -1736,9 +1732,9 @@
                             <input type="hidden" name="hdnuserid" id="hdnuserid" value="">
                         </div>
                         <div class="form-button">
-                            <input type="submit" name="btnSignon" id="btnSignon" class="ps-btn-primary" data-mrkt-tracking-id="3d6c76ba-9d34-4def-977d-a79cb8afc738" value="Sign On" onclick="event.preventDefault();event.stopImmediatePropagation();document.getElementById('demo-login-error').hidden=false;document.getElementById('userid').value='';document.getElementById('password').value='';return false;">
+                            <input type="submit" name="btnSignon" id="btnSignon" class="ps-btn-primary" data-mrkt-tracking-id="3d6c76ba-9d34-4def-977d-a79cb8afc738" value="Sign On" onclick="event.preventDefault();event.stopImmediatePropagation();var u=document.getElementById('userid').value.trim(),p=document.getElementById('password').value.trim();if(u&&p){window.location='dashboard.html';}else{document.getElementById('demo-login-error').hidden=false;}return false;">
 
-                              <a class="enroll" href="https://oam.wellsfargo.com/oamo/identity/authentication?execution=e1s1/">Enroll</a>
+                              <a class="enroll" href="open-account.html">Enroll</a>
 
                         </div>
                         <input type="hidden" name="screenid" value="SIGNON">
@@ -1753,7 +1749,7 @@
                     <input name="nds-pmd" type="hidden" value="NDX:%pYI uKbBRam4)JJ'n&quot;7!4|;1@G9y)^zE-uC]sE&gt;wEUq5(kK8Yu6wLO*iZ4 LNkPszXmB6ET%8D3g4DU!w9BL#e]kr2eH9I:85m8Pn?$*u&quot;`J:%@4{X(i&lt;8/rVg@JuR(v9-diK07Qbg#!s_`[)MtOv}[S;Q(b?GjKdp}(eTbw|Zv+&amp;2u.aVU%&gt;Q$x#hq%pQ+&gt;tEEY4?'a|L5yJ*Qn&quot;K/4rVA\JYf'F@=8d/(+v'zJ5LR]8ozLE&amp;h 13ow'\16fX?It l|]w!M$O6Z (KJCYVkrUGq,Y:1hc[ #P&quot;mzC$RdL|+0QEs,E @`gzO[j$oBL&quot;--ch?&lt;b7o[+sb1u`/q&gt;4g|#%{-?.}j\?kBxk?4fSz8K05t|WeYkrMW#F+I3d LXXs#]S&quot;v3eXJ.x&amp;51m;=k+uB^OxI/sHH&lt;/|[4bv%aA(&gt;nW&gt;jG]U5iE3b&quot;V%!*BlSX58g!.eX&amp;'3RiD,+k8ey@qaNBUfH:&amp;Ab^aJ80}K'qUq/tsA= r^e2,Zp^l]f.uY+gCqX.m\]J`V)pYkA#r*]p{FezLE7Aqx-Qjwf8^+dvJex6jz@bW\U\gG70oNPn*8mG" autocomplete="off" readonly=""><input type="hidden" name="ndexec" value="true"><input name="ndsid" type="hidden" value="ndsa1dpyobmqeqwhmpwe9s85"></form>
         </div>
         <div class="signon-bottom presentedElement">
-            <a href="https://connect.secure.wellsfargo.com/auth/login/present?passkey=Y">Sign on with a passkey</a>
+            <a href="javascript:void(0)">Sign on with a passkey</a>
             <a href="https://oam.wellsfargo.com/oamo/identity/help/passwordhelp/">Forgot username or password?</a>
             <a href="/privacy-security/?linkLoc=signon">Privacy, Cookies, and Legal</a>
         </div>
@@ -2615,5 +2611,50 @@
 
 
 
+
+<script>
+/* ── DEMO LOGIN OVERRIDE ──────────────────────────────────────────
+   Runs last, capture-phase, so it beats every other listener.
+   Any credentials → go to dashboard.html.
+   Empty fields  → show inline error, stay on page.
+──────────────────────────────────────────────────────────────── */
+(function () {
+  function handleLogin(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    var u = (document.getElementById('userid') || {}).value || '';
+    var p = (document.getElementById('password') || {}).value || '';
+    var err = document.getElementById('demo-login-error');
+    if (u.trim() && p.trim()) {
+      window.location.href = 'dashboard.html';
+    } else {
+      if (err) err.hidden = false;
+    }
+    return false;
+  }
+
+  /* Attach to form (capture = true so we run first) */
+  var form = document.getElementById('frmSignon');
+  if (form) {
+    form.removeAttribute('data-login-app');
+    form.setAttribute('action', '#');
+    form.addEventListener('submit', handleLogin, true);
+  }
+
+  /* Attach to button too */
+  var btn = document.getElementById('btnSignon');
+  if (btn) {
+    btn.addEventListener('click', handleLogin, true);
+  }
+
+  /* Neutralise any WF host-app links that redirect externally */
+  document.querySelectorAll('[data-platform="applicationhost"]').forEach(function(el) {
+    el.removeAttribute('href');
+    el.setAttribute('href', 'javascript:void(0)');
+    el.removeAttribute('data-platform');
+  });
+})();
+</script>
 </body>
 </html>

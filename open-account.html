@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open an Account — Wells Fargo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #c80000; --red-dark: #a60000;
+      --yellow: #ffcd00; --yellow-soft: #fff8e0;
+      --bg: #f5f4f1; --card: #ffffff;
+      --border: #e2ddd7; --border-focus: #c80000;
+      --text: #111111; --muted: #666666; --subtle: #999999;
+      --green: #1a7a30; --green-bg: #f0faf3;
+      --radius: 10px; --font: "Inter","Segoe UI",Arial,sans-serif;
+      --brand: Georgia,"Times New Roman",serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; min-height: 100vh; }
+
+    /* ── topbar ── */
+    .topbar {
+      height: 68px; background: linear-gradient(175deg,#d10000,var(--red-dark));
+      border-bottom: 4px solid var(--yellow);
+      display: flex; align-items: center; padding: 0 32px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar a { font-family: var(--brand); font-size: 28px; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: 0.5px; }
+
+    /* ── layout ── */
+    .page { max-width: 820px; margin: 0 auto; padding: 36px 16px 60px; }
+    .page-title { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+    .page-sub { color: var(--muted); font-size: 15px; margin-bottom: 28px; }
+
+    /* ── stepper ── */
+    .stepper { display: flex; align-items: flex-start; gap: 0; margin-bottom: 36px; overflow-x: auto; padding-bottom: 4px; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; min-width: 70px; position: relative; }
+    .step:not(:last-child)::after {
+      content: ""; position: absolute; top: 17px; left: 50%; width: 100%; height: 2px;
+      background: var(--border); z-index: 0;
+    }
+    .step.done:not(:last-child)::after { background: var(--red); }
+    .step-circle {
+      width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border);
+      background: var(--card); display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: var(--muted); position: relative; z-index: 1;
+      flex-shrink: 0; transition: all .2s;
+    }
+    .step.active .step-circle { border-color: var(--red); background: var(--red); color: #fff; }
+    .step.done .step-circle  { border-color: var(--red); background: var(--red); color: #fff; }
+    .step.done .step-circle::before { content: "✓"; }
+    .step.done .step-num { display: none; }
+    .step-label { font-size: 11px; font-weight: 600; color: var(--muted); text-align: center; white-space: nowrap; }
+    .step.active .step-label { color: var(--red); }
+    .step.done  .step-label { color: var(--red); }
+
+    /* ── card ── */
+    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 36px; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
+    @media(max-width:600px){ .form-card{ padding:24px 18px; } }
+    .card-heading { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+    .card-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+    hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+    /* ── form elements ── */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+    .field-row.one  { grid-template-columns: 1fr; }
+    .field-row.three{ grid-template-columns: 1fr 1fr 1fr; }
+    @media(max-width:560px){
+      .field-row, .field-row.three { grid-template-columns: 1fr; }
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 0; }
+    .field + .field { margin-top: 0; }
+    .field-group { margin-bottom: 20px; }
+    label { font-size: 13px; font-weight: 600; color: var(--text); }
+    label .req { color: var(--red); margin-left: 2px; }
+    label .hint { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+    input[type=text], input[type=email], input[type=tel],
+    input[type=date], input[type=password], input[type=number], select, textarea {
+      width: 100%; height: 44px; padding: 0 14px;
+      border: 1.5px solid var(--border); border-radius: 7px;
+      font-family: var(--font); font-size: 15px; color: var(--text);
+      background: #fff; outline: none;
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none; appearance: none;
+    }
+    textarea { height: 90px; padding: 10px 14px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(200,0,0,.1);
+    }
+    input.error, select.error { border-color: #d71e28; box-shadow: 0 0 0 3px rgba(215,30,40,.09); }
+    .field-error { font-size: 12px; color: #d71e28; margin-top: 3px; display: none; }
+    .field-error.show { display: block; }
+    select { background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%23666' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; }
+
+    /* radio / checkbox tiles */
+    .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr)); gap: 12px; margin-bottom: 8px; }
+    .tile-label { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: border-color .15s, background .15s; position: relative; }
+    .tile-label:hover { border-color: #bbb; background: #fafaf8; }
+    .tile-label input[type=radio], .tile-label input[type=checkbox] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .tile-label.selected { border-color: var(--red); background: #fff8f8; }
+    .tile-icon { font-size: 22px; line-height: 1; margin-bottom: 2px; }
+    .tile-name { font-size: 14px; font-weight: 700; }
+    .tile-desc { font-size: 12px; color: var(--muted); line-height: 1.35; }
+
+    /* inline checkbox */
+    .check-row { display: flex; align-items: flex-start; gap: 10px; }
+    .check-row input[type=checkbox] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--red); flex-shrink: 0; }
+    .check-row label { font-size: 13px; font-weight: 400; color: var(--text); cursor: pointer; }
+
+    /* section heading */
+    .sec-head { font-size: 14px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+    /* notice box */
+    .notice { background: var(--yellow-soft); border: 1px solid #f5d94a; border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #5a4400; line-height: 1.5; margin-bottom: 20px; }
+    .notice strong { display: block; margin-bottom: 3px; }
+
+    /* review rows */
+    .review-section { margin-bottom: 20px; }
+    .review-section h3 { font-size: 14px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+    .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+    .rv { display: flex; flex-direction: column; gap: 2px; }
+    .rv-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+    .rv-val { font-size: 14px; font-weight: 600; }
+
+    /* buttons */
+    .btn-row { display: flex; align-items: center; justify-content: space-between; margin-top: 28px; gap: 12px; }
+    .btn-row.right { justify-content: flex-end; }
+    .btn { height: 46px; padding: 0 32px; border-radius: 7px; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; transition: all .15s; border: none; }
+    .btn-primary { background: var(--red); color: #fff; }
+    .btn-primary:hover { background: var(--red-dark); }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-secondary { background: #fff; color: var(--text); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg); }
+
+    /* success screen */
+    .success { text-align: center; padding: 40px 20px; }
+    .success-icon { width: 72px; height: 72px; border-radius: 50%; background: var(--green-bg); border: 3px solid var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; }
+    .success h2 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
+    .success p { color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 420px; margin: 0 auto 24px; }
+    .acct-ref { display: inline-block; padding: 10px 24px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 28px; letter-spacing: .05em; }
+
+    /* step containers */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    /* progress bar */
+    .progress-wrap { height: 4px; background: var(--border); border-radius: 4px; margin-bottom: 28px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--red); border-radius: 4px; transition: width .35s ease; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">WELLS FARGO</a>
+</div>
+
+<div class="page">
+  <h1 class="page-title">Open an Account</h1>
+  <p class="page-sub">Secure, FDIC-insured banking in minutes. All information is encrypted and protected.</p>
+
+  <!-- STEPPER -->
+  <div class="stepper" id="stepper">
+    <div class="step active" data-step="1">
+      <div class="step-circle"><span class="step-num">1</span></div>
+      <span class="step-label">Account Type</span>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-circle"><span class="step-num">2</span></div>
+      <span class="step-label">Personal Info</span>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-circle"><span class="step-num">3</span></div>
+      <span class="step-label">Address</span>
+    </div>
+    <div class="step" data-step="4">
+      <div class="step-circle"><span class="step-num">4</span></div>
+      <span class="step-label">Identity</span>
+    </div>
+    <div class="step" data-step="5">
+      <div class="step-circle"><span class="step-num">5</span></div>
+      <span class="step-label">Employment</span>
+    </div>
+    <div class="step" data-step="6">
+      <div class="step-circle"><span class="step-num">6</span></div>
+      <span class="step-label">Funding</span>
+    </div>
+    <div class="step" data-step="7">
+      <div class="step-circle"><span class="step-num">7</span></div>
+      <span class="step-label">Review</span>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:14%"></div></div>
+
+  <!-- ── STEP 1: Account Type ── -->
+  <div class="step-panel active" id="panel-1">
+    <div class="form-card">
+      <div class="card-heading">Choose your account type</div>
+      <p class="card-sub">Select the account that best fits your financial needs. You can add more accounts later.</p>
+
+      <div class="field-group">
+        <div class="tile-grid" id="acctTypeTiles">
+          <label class="tile-label selected" onclick="selectTile(this,'acctType','checking')">
+            <input type="radio" name="acctType" value="checking" checked>
+            <span class="tile-icon">🏦</span>
+            <span class="tile-name">Everyday Checking</span>
+            <span class="tile-desc">Everyday banking with debit card &amp; online access</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'acctType','clear')">
+            <input type="radio" name="acctType" value="clear">
+            <span class="tile-icon">✅</span>
+            <span class="tile-name">Clear Access Banking</span>
+            <span class="tile-desc">No overdraft fees, no minimum balance</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'acctType','savings')">
+            <input type="radio" name="acctType" value="savings">
+            <span class="tile-icon">💰</span>
+            <span class="tile-name">Way2Save® Savings</span>
+            <span class="tile-desc">Automatic savings with competitive APY</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'acctType','platinum')">
+            <input type="radio" name="acctType" value="platinum">
+            <span class="tile-icon">⭐</span>
+            <span class="tile-name">Platinum Savings</span>
+            <span class="tile-desc">Higher APY for larger balances</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'acctType','cd')">
+            <input type="radio" name="acctType" value="cd">
+            <span class="tile-icon">🔒</span>
+            <span class="tile-name">Certificate of Deposit</span>
+            <span class="tile-desc">Fixed-term, guaranteed returns</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'acctType','money')">
+            <input type="radio" name="acctType" value="money">
+            <span class="tile-icon">📈</span>
+            <span class="tile-name">Money Market</span>
+            <span class="tile-desc">Higher interest with check-writing access</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="notice">
+        <strong>FDIC Insured</strong>
+        Your deposits are insured up to $250,000 per depositor, per institution, for each account ownership category.
+      </div>
+
+      <div class="btn-row right">
+        <button class="btn btn-primary" onclick="nextStep()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Personal Info ── -->
+  <div class="step-panel" id="panel-2">
+    <div class="form-card">
+      <div class="card-heading">Personal information</div>
+      <p class="card-sub">As required by law, we need to verify your identity. This information is 256-bit encrypted.</p>
+
+      <div class="sec-head">Legal Name</div>
+      <div class="field-group">
+        <div class="field-row three">
+          <div class="field">
+            <label>First Name <span class="req">*</span></label>
+            <input type="text" id="firstName" placeholder="e.g. John" required>
+            <span class="field-error" id="err-firstName">Please enter your first name</span>
+          </div>
+          <div class="field">
+            <label>Middle Name <span class="hint">(optional)</span></label>
+            <input type="text" id="middleName" placeholder="e.g. Michael">
+          </div>
+          <div class="field">
+            <label>Last Name <span class="req">*</span></label>
+            <input type="text" id="lastName" placeholder="e.g. Smith" required>
+            <span class="field-error" id="err-lastName">Please enter your last name</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Suffix <span class="hint">(optional)</span></label>
+            <select id="suffix">
+              <option value="">— None —</option>
+              <option>Jr.</option><option>Sr.</option><option>II</option><option>III</option><option>IV</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Date of Birth <span class="req">*</span></label>
+            <input type="date" id="dob" required>
+            <span class="field-error" id="err-dob">You must be at least 18 years old</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="sec-head">Contact Information</div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="you@email.com" required>
+            <span class="field-error" id="err-email">Please enter a valid email</span>
+          </div>
+          <div class="field">
+            <label>Confirm Email <span class="req">*</span></label>
+            <input type="email" id="emailConfirm" placeholder="you@email.com" required>
+            <span class="field-error" id="err-emailConfirm">Emails do not match</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Primary Phone <span class="req">*</span></label>
+            <input type="tel" id="phone" placeholder="(555) 000-0000" required>
+            <span class="field-error" id="err-phone">Please enter a valid phone number</span>
+          </div>
+          <div class="field">
+            <label>Phone Type</label>
+            <select id="phoneType">
+              <option>Mobile</option><option>Home</option><option>Work</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="sec-head">Government ID</div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Social Security Number <span class="req">*</span></label>
+            <input type="password" id="ssn" placeholder="XXX-XX-XXXX" maxlength="11" autocomplete="off" required>
+            <span class="field-error" id="err-ssn">Please enter a valid SSN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Country of Citizenship <span class="req">*</span></label>
+            <select id="citizenship" required>
+              <option value="">— Select —</option>
+              <option value="US" selected>United States</option>
+              <option value="CA">Canada</option><option value="GB">United Kingdom</option>
+              <option value="MX">Mexico</option><option value="IN">India</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Country of Birth <span class="req">*</span></label>
+            <select id="birthCountry" required>
+              <option value="">— Select —</option>
+              <option value="US" selected>United States</option>
+              <option value="CA">Canada</option><option value="GB">United Kingdom</option>
+              <option value="MX">Mexico</option><option value="IN">India</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="validateStep2()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: Address ── -->
+  <div class="step-panel" id="panel-3">
+    <div class="form-card">
+      <div class="card-heading">Home address</div>
+      <p class="card-sub">We need your current residential address. P.O. Boxes are not accepted.</p>
+
+      <div class="field-group">
+        <div class="field-row one">
+          <div class="field">
+            <label>Street Address <span class="req">*</span></label>
+            <input type="text" id="address1" placeholder="123 Main Street" required>
+            <span class="field-error" id="err-address1">Please enter your street address</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row one">
+          <div class="field">
+            <label>Apt / Suite / Unit <span class="hint">(optional)</span></label>
+            <input type="text" id="address2" placeholder="Apt 4B">
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row three">
+          <div class="field">
+            <label>City <span class="req">*</span></label>
+            <input type="text" id="city" placeholder="San Francisco" required>
+            <span class="field-error" id="err-city">Please enter your city</span>
+          </div>
+          <div class="field">
+            <label>State <span class="req">*</span></label>
+            <select id="state" required>
+              <option value="">— State —</option>
+              <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+              <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+              <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
+              <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
+              <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
+              <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
+              <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
+              <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
+              <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
+              <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
+              <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
+              <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
+              <option>WI</option><option>WY</option>
+            </select>
+            <span class="field-error" id="err-state">Please select a state</span>
+          </div>
+          <div class="field">
+            <label>ZIP Code <span class="req">*</span></label>
+            <input type="text" id="zip" placeholder="94102" maxlength="10" required>
+            <span class="field-error" id="err-zip">Please enter a valid ZIP code</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>How long at this address? <span class="req">*</span></label>
+            <select id="addressDuration" required>
+              <option value="">— Select —</option>
+              <option>Less than 1 year</option><option>1–2 years</option>
+              <option>2–5 years</option><option>5–10 years</option><option>10+ years</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Housing Status <span class="req">*</span></label>
+            <select id="housing" required>
+              <option value="">— Select —</option>
+              <option>Own — with mortgage</option><option>Own — free and clear</option>
+              <option>Rent</option><option>Live with family/friends</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="sec-head">Mailing Address</div>
+      <div class="field-group">
+        <div class="check-row">
+          <input type="checkbox" id="sameAddress" checked onchange="toggleMailingAddr()">
+          <label for="sameAddress">My mailing address is the same as my home address</label>
+        </div>
+      </div>
+      <div id="mailingSection" style="display:none; margin-top:16px;">
+        <div class="field-group">
+          <div class="field-row one">
+            <div class="field">
+              <label>Mailing Street Address</label>
+              <input type="text" id="mailAddress" placeholder="P.O. Box 123 or street address">
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-row three">
+            <div class="field"><label>City</label><input type="text" id="mailCity"></div>
+            <div class="field"><label>State</label>
+              <select id="mailState"><option value="">— State —</option><option>CA</option><option>NY</option><option>TX</option><option>FL</option></select>
+            </div>
+            <div class="field"><label>ZIP Code</label><input type="text" id="mailZip" maxlength="10"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="validateStep3()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: Identity Verification ── -->
+  <div class="step-panel" id="panel-4">
+    <div class="form-card">
+      <div class="card-heading">Identity verification</div>
+      <p class="card-sub">Federal law requires us to verify your identity. Please provide one of the following government-issued IDs.</p>
+
+      <div class="field-group">
+        <label style="display:block;margin-bottom:10px;">ID Type <span class="req">*</span></label>
+        <div class="tile-grid" id="idTypeTiles" style="grid-template-columns:repeat(auto-fill,minmax(145px,1fr));">
+          <label class="tile-label selected" onclick="selectTile(this,'idType','dl')">
+            <input type="radio" name="idType" value="dl" checked>
+            <span class="tile-icon">🪪</span>
+            <span class="tile-name">Driver's License</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'idType','passport')">
+            <input type="radio" name="idType" value="passport">
+            <span class="tile-icon">📘</span>
+            <span class="tile-name">US Passport</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'idType','state_id')">
+            <input type="radio" name="idType" value="state_id">
+            <span class="tile-icon">🎫</span>
+            <span class="tile-name">State ID Card</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'idType','military')">
+            <input type="radio" name="idType" value="military">
+            <span class="tile-icon">🎖️</span>
+            <span class="tile-name">Military ID</span>
+          </label>
+        </div>
+      </div>
+
+      <div id="dlFields">
+        <div class="field-group">
+          <div class="field-row">
+            <div class="field">
+              <label>ID / License Number <span class="req">*</span></label>
+              <input type="text" id="idNumber" placeholder="e.g. D12345678" required>
+              <span class="field-error" id="err-idNumber">Please enter your ID number</span>
+            </div>
+            <div class="field">
+              <label>Issuing State <span class="req">*</span></label>
+              <select id="idState">
+                <option value="">— State —</option>
+                <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+                <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+                <option>FL</option><option>GA</option><option>HI</option><option>ID</option>
+                <option>IL</option><option>IN</option><option>IA</option><option>KS</option>
+                <option>KY</option><option>LA</option><option>ME</option><option>MD</option>
+                <option>MA</option><option>MI</option><option>MN</option><option>MS</option>
+                <option>MO</option><option>MT</option><option>NE</option><option>NV</option>
+                <option>NH</option><option>NJ</option><option>NM</option><option>NY</option>
+                <option>NC</option><option>ND</option><option>OH</option><option>OK</option>
+                <option>OR</option><option>PA</option><option>RI</option><option>SC</option>
+                <option>SD</option><option>TN</option><option>TX</option><option>UT</option>
+                <option>VT</option><option>VA</option><option>WA</option><option>WV</option>
+                <option>WI</option><option>WY</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-row">
+            <div class="field">
+              <label>Issue Date <span class="req">*</span></label>
+              <input type="date" id="idIssued" required>
+              <span class="field-error" id="err-idIssued">Please enter issue date</span>
+            </div>
+            <div class="field">
+              <label>Expiration Date <span class="req">*</span></label>
+              <input type="date" id="idExpiry" required>
+              <span class="field-error" id="err-idExpiry">ID must not be expired</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="sec-head">Disclosures</div>
+      <div class="field-group" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="check-row">
+          <input type="checkbox" id="usPerson" required>
+          <label for="usPerson">I am a U.S. person (citizen, resident alien, or U.S.-based entity) for tax purposes <span style="color:var(--red)">*</span></label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="notSanctioned">
+          <label for="notSanctioned">I confirm I am not subject to backup withholding or on a sanctions list</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="publicOfficial">
+          <label for="publicOfficial">I am a senior foreign political official or have a family member who is</label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="validateStep4()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 5: Employment ── -->
+  <div class="step-panel" id="panel-5">
+    <div class="form-card">
+      <div class="card-heading">Employment &amp; income</div>
+      <p class="card-sub">This helps us understand your financial profile and offer appropriate products.</p>
+
+      <div class="field-group">
+        <label style="display:block;margin-bottom:10px;">Employment Status <span class="req">*</span></label>
+        <div class="tile-grid" id="empTiles" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));">
+          <label class="tile-label selected" onclick="selectTile(this,'empStatus','employed');toggleEmpFields('employed')">
+            <input type="radio" name="empStatus" value="employed" checked>
+            <span class="tile-icon">💼</span><span class="tile-name">Employed</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'empStatus','self');toggleEmpFields('self')">
+            <input type="radio" name="empStatus" value="self">
+            <span class="tile-icon">🧑‍💻</span><span class="tile-name">Self-Employed</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'empStatus','student');toggleEmpFields('student')">
+            <input type="radio" name="empStatus" value="student">
+            <span class="tile-icon">🎓</span><span class="tile-name">Student</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'empStatus','retired');toggleEmpFields('retired')">
+            <input type="radio" name="empStatus" value="retired">
+            <span class="tile-icon">🏖️</span><span class="tile-name">Retired</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'empStatus','unemployed');toggleEmpFields('unemployed')">
+            <input type="radio" name="empStatus" value="unemployed">
+            <span class="tile-icon">🔍</span><span class="tile-name">Not Employed</span>
+          </label>
+        </div>
+      </div>
+
+      <div id="employerFields">
+        <div class="field-group">
+          <div class="field-row">
+            <div class="field">
+              <label>Employer / Company Name <span class="req">*</span></label>
+              <input type="text" id="employer" placeholder="e.g. Acme Corporation">
+              <span class="field-error" id="err-employer">Please enter your employer name</span>
+            </div>
+            <div class="field">
+              <label>Job Title / Occupation <span class="req">*</span></label>
+              <input type="text" id="jobTitle" placeholder="e.g. Software Engineer">
+              <span class="field-error" id="err-jobTitle">Please enter your job title</span>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-row">
+            <div class="field">
+              <label>Industry</label>
+              <select id="industry">
+                <option value="">— Select —</option>
+                <option>Agriculture</option><option>Arts &amp; Entertainment</option>
+                <option>Construction</option><option>Education</option>
+                <option>Finance &amp; Insurance</option><option>Government</option>
+                <option>Healthcare</option><option>Hospitality</option>
+                <option>Information Technology</option><option>Legal</option>
+                <option>Manufacturing</option><option>Real Estate</option>
+                <option>Retail</option><option>Transportation</option>
+                <option>Utilities</option><option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Years with Employer</label>
+              <select id="yearsEmployed">
+                <option value="">— Select —</option>
+                <option>Less than 1 year</option><option>1–2 years</option>
+                <option>3–5 years</option><option>5–10 years</option><option>10+ years</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="sec-head">Financial Information</div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Annual Gross Income <span class="req">*</span></label>
+            <select id="annualIncome" required>
+              <option value="">— Select —</option>
+              <option>Under $15,000</option><option>$15,000 – $29,999</option>
+              <option>$30,000 – $49,999</option><option>$50,000 – $74,999</option>
+              <option>$75,000 – $99,999</option><option>$100,000 – $149,999</option>
+              <option>$150,000 – $249,999</option><option>$250,000 or more</option>
+            </select>
+            <span class="field-error" id="err-annualIncome">Please select your income range</span>
+          </div>
+          <div class="field">
+            <label>Source of Funds <span class="req">*</span></label>
+            <select id="fundSource" required>
+              <option value="">— Select —</option>
+              <option>Employment / Salary</option><option>Business Income</option>
+              <option>Investments</option><option>Inheritance / Gift</option>
+              <option>Retirement / Pension</option><option>Social Security / Disability</option>
+              <option>Other</option>
+            </select>
+            <span class="field-error" id="err-fundSource">Please select a fund source</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Monthly Rent / Mortgage Payment <span class="hint">(optional)</span></label>
+            <input type="number" id="monthlyHousing" placeholder="e.g. 1200" min="0">
+          </div>
+          <div class="field">
+            <label>Existing WF Customer?</label>
+            <select id="existingCustomer">
+              <option>No — this is my first account</option>
+              <option>Yes — I have a checking or savings account</option>
+              <option>Yes — I have a credit card or loan</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="validateStep5()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 6: Funding ── -->
+  <div class="step-panel" id="panel-6">
+    <div class="form-card">
+      <div class="card-heading">Fund your new account</div>
+      <p class="card-sub">Make an initial deposit to open your account. Minimum deposit requirements vary by account type.</p>
+
+      <div class="notice">
+        <strong>Minimum Opening Deposit</strong>
+        Everyday Checking: $25 · Savings: $25 · CD: $2,500 · Money Market: $100
+      </div>
+
+      <div class="field-group">
+        <label style="display:block;margin-bottom:10px;">Funding Method <span class="req">*</span></label>
+        <div class="tile-grid" id="fundTiles" style="grid-template-columns:repeat(auto-fill,minmax(155px,1fr));">
+          <label class="tile-label selected" onclick="selectTile(this,'fundMethod','transfer');toggleFundFields('transfer')">
+            <input type="radio" name="fundMethod" value="transfer" checked>
+            <span class="tile-icon">🏦</span>
+            <span class="tile-name">Bank Transfer</span>
+            <span class="tile-desc">From another bank account</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'fundMethod','debit');toggleFundFields('debit')">
+            <input type="radio" name="fundMethod" value="debit">
+            <span class="tile-icon">💳</span>
+            <span class="tile-name">Debit Card</span>
+            <span class="tile-desc">Instant funding</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'fundMethod','wf');toggleFundFields('wf')">
+            <input type="radio" name="fundMethod" value="wf">
+            <span class="tile-icon">↔️</span>
+            <span class="tile-name">WF Account</span>
+            <span class="tile-desc">From existing WF account</span>
+          </label>
+          <label class="tile-label" onclick="selectTile(this,'fundMethod','later');toggleFundFields('later')">
+            <input type="radio" name="fundMethod" value="later">
+            <span class="tile-icon">⏰</span>
+            <span class="tile-name">Fund Later</span>
+            <span class="tile-desc">Within 30 days of opening</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Bank transfer fields -->
+      <div id="transferFields">
+        <div class="field-group">
+          <div class="field-row">
+            <div class="field">
+              <label>Bank Name <span class="req">*</span></label>
+              <input type="text" id="extBankName" placeholder="e.g. Chase Bank">
+            </div>
+            <div class="field">
+              <label>Account Type</label>
+              <select id="extAcctType">
+                <option>Checking</option><option>Savings</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-row">
+            <div class="field">
+              <label>Routing Number <span class="req">*</span></label>
+              <input type="text" id="routingNum" placeholder="9-digit routing number" maxlength="9">
+              <span class="field-error" id="err-routingNum">Please enter a 9-digit routing number</span>
+            </div>
+            <div class="field">
+              <label>Account Number <span class="req">*</span></label>
+              <input type="password" id="extAcctNum" placeholder="Account number" autocomplete="off">
+              <span class="field-error" id="err-extAcctNum">Please enter your account number</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Debit card fields -->
+      <div id="debitFields" style="display:none;">
+        <div class="field-group">
+          <div class="field-row one">
+            <div class="field">
+              <label>Card Number <span class="req">*</span></label>
+              <input type="text" id="cardNum" placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-row three">
+            <div class="field">
+              <label>Name on Card</label>
+              <input type="text" id="cardName" placeholder="Full name on card">
+            </div>
+            <div class="field">
+              <label>Expiry (MM/YY)</label>
+              <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="field">
+              <label>CVV</label>
+              <input type="password" id="cardCvv" placeholder="3–4 digits" maxlength="4">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="wfFields" style="display:none;">
+        <div class="field-group">
+          <div class="field-row">
+            <div class="field">
+              <label>Existing WF Account Number</label>
+              <input type="text" id="wfAcctNum" placeholder="e.g. (...5831)">
+            </div>
+            <div class="field">
+              <label>Account Type</label>
+              <select id="wfAcctType"><option>Checking</option><option>Savings</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="laterNotice" style="display:none;">
+        <div class="notice" style="margin-top:0;">
+          <strong>Fund within 30 days</strong>
+          Your account will be opened but restricted until funded. You can fund via branch, ATM, or online transfer.
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>Opening Deposit Amount ($) <span class="req">*</span></label>
+            <input type="number" id="depositAmount" placeholder="e.g. 100" min="25" step="0.01">
+            <span class="field-error" id="err-depositAmount">Please enter a deposit amount</span>
+          </div>
+          <div class="field">
+            <label>Purpose of Account <span class="req">*</span></label>
+            <select id="acctPurpose" required>
+              <option value="">— Select —</option>
+              <option>Personal savings / emergency fund</option>
+              <option>Day-to-day spending</option>
+              <option>Payroll / direct deposit</option>
+              <option>Business expenses</option>
+              <option>Long-term savings / investment</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="validateStep6()">Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 7: Review ── -->
+  <div class="step-panel" id="panel-7">
+    <div class="form-card">
+      <div class="card-heading">Review your application</div>
+      <p class="card-sub">Please review your information before submitting. Click "Edit" on any section to make changes.</p>
+
+      <div id="reviewContent"></div>
+
+      <hr class="divider">
+      <div class="sec-head">Terms &amp; Agreements</div>
+      <div class="field-group" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="check-row">
+          <input type="checkbox" id="termsAgree" required>
+          <label for="termsAgree">I have read and agree to the <a href="#" style="color:var(--red);font-weight:600;">Wells Fargo Online Access Agreement</a> and <a href="#" style="color:var(--red);font-weight:600;">Deposit Account Agreement</a> <span style="color:var(--red)">*</span></label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="eDelivery" checked>
+          <label for="eDelivery">I consent to receive account statements, disclosures, and notices electronically</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="creditCheck">
+          <label for="creditCheck">I authorize Wells Fargo to obtain my credit report and ChexSystems report for this application</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="marketingConsent">
+          <label for="marketingConsent">I consent to receive promotional offers and marketing communications from Wells Fargo (optional)</label>
+        </div>
+      </div>
+      <div class="field-error" id="err-terms" style="font-size:13px;margin-top:6px;">Please agree to the terms to continue</div>
+
+      <div class="notice" style="margin-top:20px;">
+        <strong>Important Notice</strong>
+        By submitting, you certify that all information provided is true and accurate. False or misleading information may result in denial of your application and may be subject to federal prosecution.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitApplication()">Submit Application</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SUCCESS ── -->
+  <div class="step-panel" id="panel-success">
+    <div class="form-card">
+      <div class="success">
+        <div class="success-icon">🎉</div>
+        <h2>Application Approved!</h2>
+        <p>Congratulations! Your new <strong id="successAcctName">Everyday Checking</strong> account has been approved and is ready to use.</p>
+        <div class="acct-ref" id="acctRefNum">Account #: WF-2026-XXXXXXXX</div>
+        <p style="margin-bottom:28px;">A confirmation email has been sent to <strong id="successEmail"></strong>. Your debit card and welcome kit will arrive in 5–7 business days.</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="dashboard.html" class="btn btn-primary" style="display:inline-flex;align-items:center;text-decoration:none;height:46px;padding:0 32px;">Go to Dashboard</a>
+          <a href="index.html" class="btn btn-secondary" style="display:inline-flex;align-items:center;text-decoration:none;height:46px;padding:0 28px;">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+var currentStep = 1;
+var totalSteps  = 7;
+var formData    = {};
+
+/* ── tile selector ── */
+function selectTile(el, name, val) {
+  var tiles = document.querySelectorAll('[onclick*="' + name + '"]');
+  tiles.forEach(function(t){ t.classList.remove('selected'); });
+  el.classList.add('selected');
+  formData[name] = val;
+}
+
+/* ── step navigation ── */
+function goToStep(n) {
+  document.getElementById('panel-' + currentStep).classList.remove('active');
+  document.querySelectorAll('.step').forEach(function(s){
+    var sn = parseInt(s.dataset.step);
+    s.classList.remove('active');
+    if (sn < n)  s.classList.add('done');
+    if (sn === n) s.classList.add('active');
+    if (sn > n)  s.classList.remove('done');
+  });
+  currentStep = n;
+  document.getElementById('panel-' + n).classList.add('active');
+  var pct = Math.round((n / (totalSteps + 1)) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function nextStep() { if (currentStep < totalSteps) goToStep(currentStep + 1); }
+function prevStep() { if (currentStep > 1) goToStep(currentStep - 1); }
+
+/* ── field validation helpers ── */
+function showErr(id, show) {
+  var el = document.getElementById('err-' + id);
+  var inp = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('show', show);
+  if (inp) inp.classList.toggle('error', show);
+}
+function clearErrors(ids) { ids.forEach(function(id){ showErr(id, false); }); }
+function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function ageOk(dob) {
+  if (!dob) return false;
+  var today = new Date(), bd = new Date(dob);
+  var age = today.getFullYear() - bd.getFullYear();
+  var m = today.getMonth() - bd.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
+  return age >= 18;
+}
+
+/* ── step validators ── */
+function validateStep2() {
+  var ok = true;
+  clearErrors(['firstName','lastName','dob','email','emailConfirm','phone','ssn']);
+  if (!val('firstName'))  { showErr('firstName',true); ok=false; }
+  if (!val('lastName'))   { showErr('lastName',true);  ok=false; }
+  if (!ageOk(val('dob'))) { showErr('dob',true);       ok=false; }
+  var e = val('email');
+  if (!e || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { showErr('email',true); ok=false; }
+  if (val('emailConfirm') !== e) { showErr('emailConfirm',true); ok=false; }
+  if (!val('phone')) { showErr('phone',true); ok=false; }
+  var s = val('ssn');
+  if (!s || s.replace(/\D/g,'').length !== 9) { showErr('ssn',true); ok=false; }
+  if (ok) { saveStep2(); nextStep(); }
+}
+function saveStep2() {
+  formData.firstName = val('firstName'); formData.middleName = val('middleName');
+  formData.lastName  = val('lastName');  formData.dob        = val('dob');
+  formData.email     = val('email');     formData.phone      = val('phone');
+}
+
+function validateStep3() {
+  var ok = true;
+  clearErrors(['address1','city','state','zip']);
+  if (!val('address1')) { showErr('address1',true); ok=false; }
+  if (!val('city'))     { showErr('city',true);     ok=false; }
+  if (!val('state'))    { showErr('state',true);    ok=false; }
+  var z = val('zip');
+  if (!z || !/^\d{5}(-\d{4})?$/.test(z)) { showErr('zip',true); ok=false; }
+  if (ok) {
+    formData.address1 = val('address1'); formData.address2 = val('address2');
+    formData.city = val('city'); formData.state = val('state'); formData.zip = val('zip');
+    nextStep();
+  }
+}
+
+function validateStep4() {
+  var ok = true;
+  clearErrors(['idNumber','idIssued','idExpiry']);
+  if (!val('idNumber')) { showErr('idNumber',true); ok=false; }
+  if (!val('idIssued')) { showErr('idIssued',true); ok=false; }
+  var exp = val('idExpiry');
+  if (!exp || new Date(exp) < new Date()) { showErr('idExpiry',true); ok=false; }
+  if (!document.getElementById('usPerson').checked) {
+    alert('You must confirm you are a U.S. person for tax purposes.'); ok=false;
+  }
+  if (ok) {
+    formData.idNumber = val('idNumber'); formData.idIssued = val('idIssued');
+    formData.idExpiry = val('idExpiry');
+    nextStep();
+  }
+}
+
+function validateStep5() {
+  var ok = true;
+  clearErrors(['employer','jobTitle','annualIncome','fundSource']);
+  var status = document.querySelector('input[name="empStatus"]:checked');
+  var empVal = status ? status.value : 'unemployed';
+  if ((empVal === 'employed' || empVal === 'self') && !val('employer')) { showErr('employer',true); ok=false; }
+  if ((empVal === 'employed' || empVal === 'self') && !val('jobTitle')) { showErr('jobTitle',true); ok=false; }
+  if (!val('annualIncome')) { showErr('annualIncome',true); ok=false; }
+  if (!val('fundSource'))   { showErr('fundSource',true);   ok=false; }
+  if (ok) {
+    formData.empStatus = empVal; formData.employer = val('employer');
+    formData.jobTitle  = val('jobTitle'); formData.annualIncome = val('annualIncome');
+    formData.fundSource = val('fundSource');
+    nextStep();
+  }
+}
+
+function validateStep6() {
+  var ok = true;
+  clearErrors(['depositAmount','routingNum','extAcctNum']);
+  var method = (document.querySelector('input[name="fundMethod"]:checked') || {}).value || 'transfer';
+  if (method !== 'later') {
+    var d = parseFloat(val('depositAmount'));
+    if (!d || d < 25) { showErr('depositAmount',true); ok=false; }
+    if (method === 'transfer') {
+      if (!val('routingNum') || val('routingNum').length !== 9) { showErr('routingNum',true); ok=false; }
+      if (!val('extAcctNum')) { showErr('extAcctNum',true); ok=false; }
+    }
+  }
+  if (ok) {
+    formData.fundMethod    = method;
+    formData.depositAmount = val('depositAmount') || 'Fund later';
+    formData.acctPurpose   = val('acctPurpose');
+    buildReview();
+    nextStep();
+  }
+}
+
+/* ── review builder ── */
+var acctNames = {
+  checking:'Everyday Checking', clear:'Clear Access Banking',
+  savings:'Way2Save® Savings', platinum:'Platinum Savings',
+  cd:'Certificate of Deposit', money:'Money Market'
+};
+function buildReview() {
+  var h = '';
+  function section(title, rows) {
+    h += '<div class="review-section"><h3>' + title + '</h3><div class="review-grid">';
+    rows.forEach(function(r){ h += '<div class="rv"><span class="rv-label">' + r[0] + '</span><span class="rv-val">' + (r[1]||'—') + '</span></div>'; });
+    h += '</div></div><hr class="divider" style="margin:16px 0">';
+  }
+  var acctType = (document.querySelector('input[name="acctType"]:checked') || {}).value || 'checking';
+  section('Account', [['Account Type', acctNames[acctType] || acctType]]);
+  section('Personal Information', [
+    ['First Name', formData.firstName], ['Last Name', formData.lastName],
+    ['Date of Birth', formData.dob], ['Email', formData.email], ['Phone', formData.phone]
+  ]);
+  section('Address', [
+    ['Street', formData.address1 + (formData.address2 ? ', '+formData.address2 : '')],
+    ['City / State / ZIP', formData.city + ', ' + formData.state + ' ' + formData.zip]
+  ]);
+  section('Employment', [
+    ['Status', formData.empStatus], ['Employer', formData.employer || '—'],
+    ['Job Title', formData.jobTitle || '—'], ['Annual Income', formData.annualIncome]
+  ]);
+  section('Funding', [
+    ['Method', formData.fundMethod], ['Deposit Amount', formData.depositAmount ? '$'+formData.depositAmount : '—'],
+    ['Purpose', formData.acctPurpose || '—']
+  ]);
+  document.getElementById('reviewContent').innerHTML = h;
+}
+
+/* ── submit ── */
+function submitApplication() {
+  var termsEl = document.getElementById('termsAgree');
+  var errEl   = document.getElementById('err-terms');
+  if (!termsEl.checked) {
+    errEl.classList.add('show'); return;
+  }
+  errEl.classList.remove('show');
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Processing…';
+  setTimeout(function() {
+    var acctType = (document.querySelector('input[name="acctType"]:checked') || {}).value || 'checking';
+    document.getElementById('successAcctName').textContent = acctNames[acctType] || acctType;
+    document.getElementById('successEmail').textContent    = formData.email || '';
+    document.getElementById('acctRefNum').textContent      = 'Account #: WF-' + new Date().getFullYear() + '-' + Math.random().toString(36).substr(2,8).toUpperCase();
+    document.getElementById('panel-' + currentStep).classList.remove('active');
+    document.getElementById('panel-success').classList.add('active');
+    document.querySelectorAll('.step').forEach(function(s){ s.classList.add('done'); s.classList.remove('active'); });
+    document.getElementById('progressBar').style.width = '100%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 1800);
+}
+
+/* ── toggle helpers ── */
+function toggleMailingAddr() {
+  var same = document.getElementById('sameAddress').checked;
+  document.getElementById('mailingSection').style.display = same ? 'none' : 'block';
+}
+function toggleEmpFields(status) {
+  var show = (status === 'employed' || status === 'self');
+  document.getElementById('employerFields').style.display = show ? 'block' : 'none';
+}
+function toggleFundFields(method) {
+  document.getElementById('transferFields').style.display = method === 'transfer' ? 'block' : 'none';
+  document.getElementById('debitFields').style.display    = method === 'debit'    ? 'block' : 'none';
+  document.getElementById('wfFields').style.display       = method === 'wf'       ? 'block' : 'none';
+  document.getElementById('laterNotice').style.display    = method === 'later'    ? 'block' : 'none';
+}
+
+/* ── phone / SSN / card formatters ── */
+document.addEventListener('DOMContentLoaded', function(){
+  var phoneEl = document.getElementById('phone');
+  if (phoneEl) phoneEl.addEventListener('input', function(){
+    var v = this.value.replace(/\D/g,'');
+    if (v.length >= 10) this.value = '('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6,10);
+  });
+  var ssnEl = document.getElementById('ssn');
+  if (ssnEl) ssnEl.addEventListener('input', function(){
+    var v = this.value.replace(/\D/g,'');
+    if (v.length > 5) this.value = v.slice(0,3)+'-'+v.slice(3,5)+'-'+v.slice(5,9);
+    else if (v.length > 3) this.value = v.slice(0,3)+'-'+v.slice(3);
+  });
+  var cardEl = document.getElementById('cardNum');
+  if (cardEl) cardEl.addEventListener('input', function(){
+    var v = this.value.replace(/\D/g,'');
+    this.value = v.replace(/(\d{4})/g,'$1 ').trim().slice(0,19);
+  });
+  var routEl = document.getElementById('routingNum');
+  if (routEl) routEl.addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g,'').slice(0,9);
+  });
+});
+</script>
+</body>
+</html>
